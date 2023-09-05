@@ -1,0 +1,84 @@
+#
+# This is a Shiny web application. You can run the application by clicking
+# the 'Run App' button above.
+#
+# Find out more about building applications with Shiny here:
+#
+#    http://shiny.rstudio.com/
+#
+
+# Add python function for prediction !!!
+
+library(shiny)
+library(reticulate)
+library(imager)
+library(jpeg)
+library(png)
+
+
+
+# reticulate::source_python('/Users/jamelbelgacem/Documents/Python/Deep learning/Picture classification/cats and dogs/Class_Prediction_Function.py')
+
+
+# Define UI for application that draws a histogram
+ui <- fluidPage(
+
+    # Application title
+    titlePanel("Image classification: Cat or Dog ?"),
+
+    column(width = 10, offset = 1,
+           fluidRow(style = 'height:20px;'),
+           fluidRow(
+             column(width=5, fileInput("ImagePath",
+                                        label = "Select the path of an image of a cat or dog:",
+                                        multiple = FALSE, accept = c('.jpg', '.png', '.jpeg'))),
+                                       # , width = '60%', buttonLabel = list(icon('download'), 'upload'),placeholder = '...')),
+             column(width=7, imageOutput('ImageDisplay'))
+           ),
+           fluidRow(
+             column(width=5, tableOutput('PredictionTable'))
+           ),
+           fluidRow(
+             column(width=3, textOutput('PredictionResult'))
+           ))
+)
+
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+
+      reticulate::use_condaenv('picture_class_proj1')
+      reticulate::source_python('Class_Prediction_Function.py')
+
+
+      
+      
+      output$ImageDisplay <- renderImage({
+        inFile <- input$ImagePath
+        if(is.null(inFile)) return(NULL)
+        
+        ext <- tools::file_ext(inFile$datapath)
+        if(ext %in% c("jpg", "jpeg")){
+          img <- readJPEG(inFile$datapath)
+        }else if(ext=='png'){
+          img <- readPNG(inFile$datapath)
+        }else{
+          return(NULL)
+        }
+        list(src=inFile$datapath,
+             contenctType = paste0("image/", ext),
+             width=400, height=400)
+      }, deleteFile = FALSE)
+      
+      # output$PredictionTable <- renderTable({
+      #   output_vals()[[2]]
+      # })
+      
+      output$PredictionResult <- renderText({
+        browser()
+        predictied_class <- image_prediction('/Users/jamelbelgacem/Documents/Python/Deep learning/Picture classification/cats and dogs/data/train/cats/cat_238.jpg')
+        return(predictied_class)
+      })
+}
+
+# Run the application 
+shinyApp(ui = ui, server = server)

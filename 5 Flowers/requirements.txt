@@ -1,0 +1,10 @@
+pandas
+numpy
+tensorflow
+keras
+matplotlib
+scikit-learn
+nltk
+wordcloud
+pillow
+jupyter
