@@ -1,4 +1,4 @@
-# Picture_classification
+# Picture classification
 Personal projects of picture classification using neural network
 In this repository I added some private picture classification projects:
 <ul>
