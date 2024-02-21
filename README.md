@@ -4,5 +4,5 @@ In this repository I added some private picture classification projects:
 <ul>
   <ol>- 5 Flowers</ol>
   <ol>- Cats and dogs</ol>
-  <ol>- Wilfire forest</ol>
+  <ol>- Wildfire forest</ol>
 </ul>
